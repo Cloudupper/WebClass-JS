@@ -198,11 +198,11 @@
         let text = "";
         let multiplication = document.getElementById("multiplication");
         for (let i = 1; i < 10; i++) {
-            text += "<p>";
+            text += '<p>';
             for (let j = 1; j < i + 1; j++) {
-                text += "<span>" + i + "*" + j + "=" + i * j + "</span>";
+                text += `<span>${i} * ${j} = ${i*j}</span>`;
             }
-            text += "</p>"
+            text += '</p>'
         }
         multiplication.innerHTML = text;
     };
