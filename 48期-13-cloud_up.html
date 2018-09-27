@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>这是js第48期第13课的作业-嵌套选项卡</title>
+</head>
+<style type="text/css">
+    body{font-family: "Microsoft YaHei",serif;}
+    body,dl,dd,p,h1,h2,h3,h4,h5,h6{margin:0;}
+    ol,ul,li{margin:0;padding:0;list-style:none;}
+    img{border:none;}
+
+    #container
+    {
+        width: 300px;
+        height:200px;
+        margin: 80px auto 0;
+        user-select: none;
+    }
+    #container #sidebar,#container #img
+    {
+        float:left;
+    }
+    #sidebar
+    {
+        width: 100px;
+        height:100%;
+        background:rgb(49,51,53);
+    }
+    #sidebar ul
+    {
+        width: 100px;
+    }
+    #sidebar ul li
+    {
+        width: 100px;
+        height:50px;
+        font-size: 14px;
+        border-bottom: 1px solid #bbb;
+        line-height: 50px;
+        text-align: center;
+        color:rgb(97,218,221);
+    }
+    #sidebar ul li:hover
+    {
+        background:rgb(81,86,88);
+    }
+    #img
+    {
+        position: relative;
+        width:200px;
+        height:100%;
+    }
+    #img div.imgRegion
+    {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+    #img div.show
+    {
+        display: block;
+    }
+    #img div.imgRegion ul.imgList
+    {
+        width: 100%;
+        height: 100%;
+    }
+    #img ul.imgList li
+    {
+        display: none;
+        width: 100%;
+        height: 100%;
+        background: rgb(205,205,205);
+    }
+    #img ul.imgList li img
+    {
+        width:100%;
+        height: 100%;
+    }
+    #img ul.imgList li.show {
+        display: block;
+    }
+    #img ul.num
+    {
+        position: relative;
+        top: -25px;
+        left:5px;
+        width:200px;
+        height:20px;
+    }
+    #img ul.num li
+    {
+        float: left;
+        width:20px;
+        height: 20px;
+        margin: 0 5px 0 0;
+        font-size: 14px;
+        text-align: center;
+        color: #fff;
+        background: rgba(0,0,0,.3);
+    }
+    #img ul.num li.show
+    {
+        background: rgba(0,0,0,.5);
+    }
+    #img ul.num li:hover
+    {
+        background: rgba(0,0,0,.5);
+    }
+</style>
+<script type="text/javascript">
+    window.onload=function() {
+        let tabList = document.querySelectorAll('#sidebar ul li'),
+            imgRegionList = document.querySelectorAll('#img div.imgRegion'),
+            imgGroupList = document.querySelectorAll('#img div.imgRegion ul.imgList'),
+            imgNumList = document.querySelectorAll('#img div.imgRegion ul.num'),
+            imgRegionIndex = 0,
+            timeout;
+        for (let i = 0; i < tabList.length; i++) {
+            //获取每一组img和img对应的索引
+            let imgList = imgGroupList[i].querySelectorAll('li');
+            let numList = imgNumList[i].querySelectorAll('li');
+            let numberIndex = 0;
+
+            function imgChange(index) {
+                numList[numberIndex].className = "";
+                imgList[numberIndex].className = "";
+                numList[index].className = "show";
+                imgList[index].className = "show";
+                numberIndex = index;
+            }
+            //给左侧每一个tab选项绑定鼠标移入事件，并设置触发延迟
+            tabList[i].onmouseover = function () {
+                timeout = setTimeout(function () {
+                    if (imgRegionIndex === i) return;
+                    //当切换tab时将上一个imgRegion的内容恢复初始状态
+                    imgChange(0);
+                    imgRegionList[imgRegionIndex].className = "imgRegion";//隐藏上一个imgRegion
+                    imgRegionList[i].className = "imgRegion show";//显示触发的imgRegion
+                    imgRegionIndex = i;
+                }, 100);
+            };
+            tabList[i].onmouseout = function () {
+                clearTimeout(timeout);//在触发时间范围内移出则取消当前事件
+            };
+            //给右边图片索引绑定鼠标移入事件
+            for (let j = 0; j < numList.length; j++) {
+                numList[j].onmouseover = function () {
+                    if (numberIndex === j) return;
+                    imgChange(j);
+                }
+            }
+        }
+    }
+</script>
+<body>
+<div id="container">
+    <div id="sidebar">
+        <ul>
+            <li title="WebBase"><span>WebBase</span></li>
+            <li title="WebFrame"><span>WebFrame</span></li>
+            <li title="Server"><span>Server</span></li>
+        </ul>
+    </div>
+    <div id="img">
+        <div class="imgRegion show">
+            <ul class="imgList">
+                <li class="show"><img src="img/css3.png" alt=""></li>
+                <li><img src="img/html5.png" alt=""></li>
+                <li><img src="img/js.png" alt=""></li>
+                <li><img src="img/JSON.png" alt=""></li>
+            </ul>
+            <ul class="num">
+                <li class="show">1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+            </ul>
+        </div>
+        <div class="imgRegion">
+            <ul class="imgList">
+                <li class="show"><img src="img/React.png" alt=""></li>
+                <li><img src="img/sass.png" alt=""></li>
+                <li><img src="img/vue.png" alt=""></li>
+                <li><img src="img/grunt-detail.jpg" alt=""></li>
+            </ul>
+            <ul class="num">
+                <li class="show">1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+            </ul>
+        </div>
+        <div class="imgRegion">
+            <ul class="imgList">
+                <li class="show"><img src="img/python.png" alt=""></li>
+                <li><img src="img/Go-brown.png" alt=""></li>
+                <li><img src="img/Webpack.png" alt=""></li>
+            </ul>
+            <ul class="num">
+                <li class="show">1</li>
+                <li>2</li>
+                <li>3</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
