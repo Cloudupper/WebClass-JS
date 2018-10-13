@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>这是js第48期第18课的作业-复选框、购物车、精致选项卡</title>
+</head>
+<style>
+    body{font-family: "Microsoft YaHei",serif;}
+    body,dl,dd,p,h1,h2,h3,h4,h5,h6{margin:0;}
+    ol,ul,li{margin:0;padding:0;list-style:none;}
+    img{border:none;}
+    /* 复选框 */
+    #container {
+        width:300px;
+        margin:100px 0 0 50px;
+        border:1px solid #ddd;
+        border-radius:3%;
+        user-select: none;
+    }
+    #container li.unSelect {
+        background: url("./img/18/ckbg1.jpg") 5% 50% no-repeat;
+    }
+    #container li.Selected {
+        background: url("./img/18/ckbg2.jpg") 5% 50% no-repeat;
+    }
+    #checkBox {
+        width:300px;
+        margin-top:20px;
+        background: #eee;
+    }
+    #checkBox ul {
+        width:300px;
+    }
+    #checkBox ul li {
+        width:300px;
+        height:40px;
+        line-height: 40px;
+        font-size: 14px;
+        color:#fff;
+        cursor: pointer;
+    }
+    #checkBox ul li span {
+        margin-left: 40px;
+    }
+    #btnSelect {
+        width:300px;
+        height:50px;
+        padding:0 50px;
+        line-height: 50px;
+        text-align: center;
+    }
+    #btnSelect ul {
+        width:300px;
+        height: 50px;
+    }
+    #btnSelect ul li {
+        float: left;
+        width:100px;
+        color:#000;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    #btnSelect ul li label {
+        cursor: pointer;
+    }
+    /* 购物车 */
+    #rightSide {
+        width: 35px;
+        height:100%;
+        position: absolute;
+        top: 0;
+        right:-35px;
+        transition: right 0.3s;
+        background-color: #000;
+        user-select: none;
+    }
+    #rightSide .cat,#rightSide .money,#rightSide .star,#rightSide .history {
+        width: 35px;
+        height:35px;
+        position: relative;
+        left:0;
+    }
+    #rightSide .cat:hover,#rightSide .money:hover,#rightSide .star:hover,#rightSide .history:hover {
+        background-color: #ff0036;
+    }
+    #rightSide .cat{
+        top:155px;
+        background-image: url("./img/18/cat.png");
+    }
+    #rightSide .money{
+        top:275px;
+        background-image: url("./img/18/money.png");
+    }
+    #rightSide .star {
+        top: 275px;
+        background-image: url("./img/18/star.png");
+    }
+    #rightSide .history {
+        top:275px;
+        background-image: url("./img/18/history.png");
+    }
+    #rightSide #shopping {
+        width:inherit;
+        height:100px;
+        position: absolute;
+        top:200px;
+        right:35px;
+        transition: right 0.3s;
+        background: #000;
+        cursor: pointer;
+    }
+    #shopping .shop-icon {
+        width: 35px;
+        height:35px;
+        position: absolute;
+        top:10px;
+        left:0;
+        background-image: url("./img/18/shopping(red).png");
+    }
+    #shopping .shop-txt {
+        width: 20px;
+        height: 50px;
+        position: absolute;
+        left: 7px;
+        top: 40px;
+        color:#fff;
+        font-size: 12px;
+        text-align: center;
+        line-height: 16px;
+        overflow: hidden;
+        padding: 0;
+    }
+    #shopping .shop-border {
+        width:25px;
+        height:98px;
+        position:absolute;
+        top:0;
+        left:5px;
+        border:1px solid #444;
+        border-width: 1px 0;
+    }
+    /* 精致选项卡 */
+    #fineTab {
+        width:880px;
+        position: absolute;
+        top:100px;
+        left: 400px;
+        font-size: 14px;
+        user-select: none;
+    }
+    #fineTab .stripeBg {
+        height: 7px;
+        width: 880px;
+        background: url("./img/18/stripeBg.png") no-repeat 0 0;
+        overflow: hidden;
+    }
+    #fineTab .tabTitle {
+        height: 40px;
+        line-height: 40px;
+        background: #f5f5f5;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    #fineTab .tabTitle .bgBlock {
+        position: relative;
+        background: #000;
+        padding: 0 24px;
+        color: #fff;
+        display: inline-block;
+        float: left;
+    }
+    #fineTab .tabTitle .bgBlock:after {
+        content: "";
+        position: absolute;
+        left: 100%;
+        top: 35%;
+        border: 6px solid transparent;
+        border-left-color: #000;
+    }
+    #fineTab .tabTitle .tabTitle-link{
+        width:500px;
+        height:40px;
+        display: inline-block;
+        float: left;
+        margin-left: 40px;
+    }
+    #fineTab .tabTitle .tabTitle-link ul{
+        width:inherit;
+        height:inherit;
+    }
+    #fineTab .tabTitle .tabTitle-link ul li{
+        position: relative;
+        float: left;
+        margin-right: 32px;
+        cursor: pointer;
+    }
+    #fineTab .tabTitle .tabTitle-link ul li i{
+        width: 0;
+        transform: translate(-50%);
+        transition:width .4s;
+        height: 2px;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        background-color: rgb(219, 58, 69);
+    }
+    #tabBody{
+        width:880px;
+        height:260px;
+    }
+    #tabBody ul{
+        width:880px;
+        height:200px;
+    }
+    #tabBody ul li.tab {
+        width:inherit;
+        height:inherit;
+        position: relative;
+        display: none;
+    }
+    #tabBody li.tab li{
+        float:left;
+        margin-right: 35px;
+        width:270px;
+        height:200px;
+    }
+    #tabBody li.tab li.mr-0{
+        margin-right: 0;
+    }
+    #tabBody li.tab li img{
+        width:270px;
+        height:200px;
+    }
+    #tabBody li.tab li p{
+        height: 24px;
+        line-height: 24px;
+        overflow: hidden;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+</style>
+<script>
+    window.onload=function () {
+        function initCheckBox() {
+            let bgColorArr = ['666', 'aaa', 'ccc'],
+                bgIndex = 0,
+                isSelectedAll = false,
+                liList = document.querySelectorAll('#checkBox ul li'),
+                btnSelectAll = document.querySelector('.btnSelectAll'),
+                btnSelectInvert = document.querySelector('.btnSelectInvert');
+            for (let i = 0; i < liList.length; i++) {
+                //添加渐变样式及背景图片
+                bgIndex = i < bgColorArr.length ? i : i % bgColorArr.length;
+                liList[i].style.backgroundColor = '#' + bgColorArr[bgIndex];
+                liList[i].classList.add('unSelect');
+                //添加点击事件用于切换选中状态
+                liList[i].onclick = function () {
+                    toggle(this);
+                    for (let j = 0; j < liList.length; j++) {
+                        if (liList[j].classList.contains('unSelect')) {
+                            isSelectedAll = false;
+                            btnSelectAll.classList.replace('Selected', 'unSelect');
+                            return;
+                        }
+                    }
+                    btnSelectAll.classList.replace('unSelect', 'Selected');//选中全选复选框
+                }
+            }
+            //全选
+            btnSelectAll.onclick = function () {
+                toggle(this);
+                for (let i = 0; i < liList.length; i++) {
+                    if (!isSelectedAll)
+                        liList[i].classList.replace('unSelect', 'Selected');
+                    else liList[i].classList.replace('Selected', 'unSelect');
+                }
+                isSelectedAll = !isSelectedAll;
+            };
+            //反选
+            btnSelectInvert.onclick = function () {
+                toggle(this);
+                for (let i = 0; i < liList.length; i++) {
+                    toggle(liList[i]);
+                }
+            };
+
+            function toggle(obj) {
+                obj.classList.toggle('unSelect');
+                obj.classList.toggle('Selected');
+            }
+        }
+        function initShopping() {
+            let rightSide = document.querySelector('#rightSide'),
+                shopping = document.querySelector('#shopping'),
+                shopIcon = document.querySelector('#shopping .shop-icon'),
+                shopBorder = document.querySelector('#shopping .shop-border'),
+                tOutShow,
+                isAlert = false;
+            shopping.onmouseenter = function () {
+                changeBg('#ff0036', 'url("./img/18/shopping(white).png")', 'none');//立刻改变背景
+                tOutShow = setTimeout(function () {
+                    if (!isAlert) {
+                        changeBg('', 'url("./img/18/shopping(red).png")', '');//延时恢复背景
+                        switchSide('0', '0', true);//显示侧边栏，将开关状态改为开启
+                    }
+                }, 300);
+            };
+            shopping.onmouseleave = function () {
+                changeBg('', 'url("./img/18/shopping(red).png")', '');//立刻恢复背景
+            };
+            rightSide.onmouseleave = function () {
+                clearTimeout(tOutShow);
+                setTimeout(function () {
+                    switchSide('-35px', '35px', false);//隐藏侧边栏，将开关状态改为关闭
+                }, 100);
+            };
+
+            function changeBg(bgColor, url, display) {
+                shopping.style.backgroundColor = bgColor;
+                shopIcon.style.backgroundImage = url;
+                shopBorder.style.display = display;
+            }
+
+            function switchSide(rSize, sSize, state) {
+                rightSide.style.right = rSize;
+                shopping.style.right = sSize;
+                isAlert = state;
+            }
+        }
+        function fineTab() {
+            let tabTitleList = document.querySelectorAll('#fineTab .tabTitle .tabTitle-link ul li'),
+                titleIndex = 0,
+                itemIndex = 0,
+                tOutChange;
+            let tabList = document.querySelectorAll('#tabBody ul li.tab');
+            tabList[itemIndex].style.display = 'block';
+            tabTitleList[titleIndex].children[0].style.width = tabTitleList[titleIndex].offsetWidth + 'px';
+            for(let i =0;i<tabTitleList.length;i++)
+            {
+                tabTitleList[i].onmouseenter=function () {
+                    tabTitleList[titleIndex].children[0].style.display = 'none';
+                    tabTitleList[titleIndex].children[0].style.width = '0';
+                    this.children[0].style.display = 'block';
+                    this.children[0].style.width = this.offsetWidth + 'px';
+                    titleIndex = i;
+                    tOutChange = setTimeout(function () {
+                        changeTab()//延时切换选项卡对应图片
+                    },300);
+                };
+                tabTitleList[i].onmouseleave=function () {
+                    clearTimeout(tOutChange);
+                };
+                function changeTab() {
+                    tabList[itemIndex].style.display = 'none';
+                    tabList[i].style.display = 'block';
+                    itemIndex = i;
+                }
+            }
+        }
+        initCheckBox();//初始化复选框
+        initShopping();//初始化购物车
+        fineTab();//初始化精致选项卡
+    };
+</script>
+<body>
+<div id="container">
+    <div id="checkBox">
+        <ul>
+            <li><span>项目1</span></li>
+            <li><span>项目2</span></li>
+            <li><span>项目3</span></li>
+            <li><span>项目4</span></li>
+            <li><span>项目5</span></li>
+            <li><span>项目6</span></li>
+            <li><span>项目7</span></li>
+            <li><span>项目8</span></li>
+        </ul>
+    </div>
+    <div id="btnSelect">
+        <ul>
+            <li class="btnSelectAll unSelect"><label>全选</label></li>
+            <li class="btnSelectInvert unSelect"><label>反选</label></li>
+        </ul>
+    </div>
+</div>
+<div id="fineTab">
+    <div class="stripeBg"></div>
+    <div class="tabTitle">
+        <div class="bgBlock">独家精品策划</div>
+        <div class="tabTitle-link">
+            <ul>
+                <li>全部<i></i></li>
+                <li>时装周<i></i></li>
+                <li>潮我看齐<i></i></li>
+            </ul>
+        </div>
+    </div>
+    <div id="tabBody">
+        <ul>
+            <li class="tab">
+                <ul>
+                    <li><img src="./img/18/chao.jpg" alt=""><p>潮我看齐：罗志祥携手CTO男团</p></li>
+                    <li><img src="./img/18/paris.jpg" alt=""><p>2019春夏巴黎时装周</p></li>
+                    <li class="mr-0"><img src="./img/18/dapei.jpg" alt=""><p>搭配速成班：宋轶亲身教你3种心机约会装！</p></li>
+                </ul>
+            </li>
+            <li class="tab">
+                <ul>
+                    <li><img src="./img/18/paris.jpg" alt=""><p>2019春夏巴黎时装周</p></li>
+                    <li><img src="./img/18/milan.jpg" alt=""><p>2019春夏米兰时装周</p></li>
+                    <li class="mr-0"><img src="./img/18/london.jpg" alt=""><p>London2019</p></li>
+                </ul>
+            </li>
+            <li class="tab">
+                <ul>
+                    <li><img src="./img/18/chao.jpg" alt=""><p>潮我看齐：罗志祥携手CTO男团</p></li>
+                    <li><img src="./img/18/masichun.jpg" alt=""><p>潮我看齐之马思纯，难道只用简单笑容就治愈了我？</p></li>
+                    <li class="mr-0"><img src="./img/18/wenyongshan.jpg" alt=""><p>潮我看齐：果汁女孩文咏珊</p></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="stripeBg"></div>
+</div>
+<div id="rightSide">
+    <div class="cat"></div>
+    <div id="shopping">
+        <div class="shop-icon"></div>
+        <div class="shop-txt">购物车</div>
+        <div class="shop-border"></div>
+    </div>
+    <div class="money"></div>
+    <div class="star"></div>
+    <div class="history"></div>
+</div>
+</body>
+</html>
