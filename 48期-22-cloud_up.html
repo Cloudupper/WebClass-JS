@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>这是js第48期第22课的作业-文本搜索与替换</title>
+</head>
+<style>
+    body {font-family: "Microsoft YaHei", serif;user-select: none;}
+    body, dl, dd, p, h1, h2, h3, h4, h5, h6 {margin: 0;}
+    ol, ul, li {margin: 0;padding: 0;list-style: none;}
+    img {border: none;}
+
+    #container{
+        width:600px;
+        height:300px;
+        margin:100px auto 0;
+    }
+    #searcher{
+        width:576px;
+        height:276px;
+        padding:10px;
+        border:2px solid #ddd;
+    }
+    #form{
+        width:inherit;
+        height:40px;
+        line-height: 40px;
+        text-align: center;
+    }
+    #form input,#form button{
+        margin:0 5px;
+    }
+    #content{
+        margin-top:10px;
+        font-size: 14px;
+        text-indent: 2em;
+    }
+    #content span{
+        color:red;
+    }
+</style>
+<script>
+    window.onload = function () {
+        function initText() {
+            let btnSearch = document.querySelector("#btnSearch"),
+                btnReplace = document.querySelector("#btnReplace"),
+                btnReset = document.querySelector("#btnReset"),
+                inpSerText = document.querySelector("#inpSeaText"),
+                inpRepText = document.querySelector("#inpRepText"),
+                content = document.querySelector("#content"),
+                currentStr = '',
+                text = `<p>前端还是一个年轻的行业，新的行业标准， 框架， 库都不断在更新和新增，
+                        正如赫门在2015深JS大会上的《前端服务化之路》主题演讲中说的一句话："每18至24个月，
+                        前端都会难一倍"，这些变化使前端的能力更加丰富、创造的应用也会更加完美。所以关注各种前端技术，
+                        跟上快速变化的节奏，也是身为一个前端程序员必备的技能之一。</p>
+                        <p>过去的十年网页多亏使用了JavaScript变得更加动态化和强大，我们已经把很多传统的服务器端代码放到了浏览器中。
+                        这样就形成了成千上万的js代码连接html和css的状态，这种状态缺乏正规点的组织形式使前端开发变得复杂凌乱。
+                        所以会出现越来越多的开发者使用js框架诸如angular、react、vue</p>
+                        <p>vue是一个友好的(Approachable)、多用途的(Versatile)、高性能的(Performant)JavaScript框架
+                        它能够帮你创建可维护的(Maintainable)、可测试的(Testable)代码库</p>`;
+            content.innerHTML = text;
+            //将传入字符串中的子串替换为新字符串
+            function strReplace(str, oldStr, newStr) {
+                let inpLen = oldStr.length;
+                let indent = inpLen - 1;
+                let textArr = str.split('');
+                let s = '';
+                for (let i = 0, j = 0, len = str.length; i < len; i++) {
+                    s = str.substr(i, inpLen);
+                    if (s === oldStr) {
+                        if (newStr) textArr.splice(i - j, inpLen, newStr);
+                        else textArr.splice(i - j, inpLen);
+                        j = j + indent;
+                    }
+                }
+                return textArr.join('');
+            }
+
+            currentStr = content.innerHTML;//获取内容文本
+            btnReset.onclick = function strReset() {
+                content.innerHTML = text;
+                currentStr = text;
+            };
+            btnSearch.onclick = function () {
+                if (!inpSerText.value) return;//搜索栏不能为空
+                content.innerHTML = currentStr;
+                content.innerHTML = strReplace(currentStr, inpSerText.value, '<span>' + inpSerText.value + '</span>');
+            };
+            btnReplace.onclick = function () {
+                if (!inpRepText.value || inpSerText.value === inpRepText.value) return;//替换栏不能为空且值不能等于搜索栏
+                content.innerHTML = strReplace(currentStr, inpSerText.value, inpRepText.value);
+                currentStr = content.innerHTML;
+            };
+        }
+
+        initText();
+    }
+</script>
+<body>
+    <div id="container">
+        <div id="searcher">
+            <div id="form">
+                <input id="inpSeaText" type="text">
+                <button id="btnSearch">搜索</button>
+                <input id="inpRepText" type="text">
+                <button id="btnReplace">替换</button>
+                <button id="btnReset">重置</button>
+            </div>
+            <div id="content"></div>
+        </div>
+    </div>
+</body>
+</html>
