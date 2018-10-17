@@ -49,6 +49,8 @@
                 inpRepText = document.querySelector("#inpRepText"),
                 content = document.querySelector("#content"),
                 currentStr = '',
+                textArr,
+                isSearch = false,
                 text = `<p>前端还是一个年轻的行业，新的行业标准， 框架， 库都不断在更新和新增，
                         正如赫门在2015深JS大会上的《前端服务化之路》主题演讲中说的一句话："每18至24个月，
                         前端都会难一倍"，这些变化使前端的能力更加丰富、创造的应用也会更加完美。所以关注各种前端技术，
@@ -59,37 +61,28 @@
                         <p>vue是一个友好的(Approachable)、多用途的(Versatile)、高性能的(Performant)JavaScript框架
                         它能够帮你创建可维护的(Maintainable)、可测试的(Testable)代码库</p>`;
             content.innerHTML = text;
-            //将传入字符串中的子串替换为新字符串
-            function strReplace(str, oldStr, newStr) {
-                let inpLen = oldStr.length;
-                let indent = inpLen - 1;
-                let textArr = str.split('');
-                let s = '';
-                for (let i = 0, j = 0, len = str.length; i < len; i++) {
-                    s = str.substr(i, inpLen);
-                    if (s === oldStr) {
-                        if (newStr) textArr.splice(i - j, inpLen, newStr);
-                        else textArr.splice(i - j, inpLen);
-                        j = j + indent;
-                    }
-                }
-                return textArr.join('');
-            }
 
             currentStr = content.innerHTML;//获取内容文本
-            btnReset.onclick = function strReset() {
+            btnReset.onclick = () => {
                 content.innerHTML = text;
                 currentStr = text;
             };
-            btnSearch.onclick = function () {
+            btnSearch.onclick = () => {
                 if (!inpSerText.value) return;//搜索栏不能为空
-                content.innerHTML = currentStr;
-                content.innerHTML = strReplace(currentStr, inpSerText.value, '<span>' + inpSerText.value + '</span>');
+                textArr = currentStr.split(inpSerText.value);
+                if (textArr.length > 1) {
+                    content.innerHTML = textArr.join(`<span>${inpSerText.value}</span>`);
+                    isSearch = true;//当搜索到结果时更改状态
+                }
+                else content.innerHTML = currentStr;
             };
-            btnReplace.onclick = function () {
-                if (!inpRepText.value || inpSerText.value === inpRepText.value) return;//替换栏不能为空且值不能等于搜索栏
-                content.innerHTML = strReplace(currentStr, inpSerText.value, inpRepText.value);
-                currentStr = content.innerHTML;
+            btnReplace.onclick = () => {
+                if (inpSerText.value === inpRepText.value) return;//替换栏值不能等于搜索栏
+                if (isSearch) {
+                    currentStr = currentStr.split(inpSerText.value).join(inpRepText.value);//当搜索到结果时进行文本替换，当替换栏为空此行代码可看作清除搜索内容操作
+                    content.innerHTML = inpRepText.value ? currentStr.split(inpRepText.value).join(`<span>${inpRepText.value}</span>`) : currentStr;
+                    isSearch = false;
+                }
             };
         }
 
