@@ -1,0 +1,323 @@
+option2 :
+1.js加载的方式
+* js 的位置在浏览器实际加载的时候只会存在两个地方，(1)body标签内部 (2) head标签内部
+* 标签<script>写在body里的时候归为第一类，否则在body外的都会被当做在head标签内部被加载归为第二类
+* 浏览器加载时会从上至下依次加载，若出现js报错如 cannot set *** of null 一般就是js在元素加载前被加载导致无法识别相关dom操作。
+若想避免这种错误需要在js外加上window.onload(){}使js在标签元素加载后再加载。
+2.js点击事件绑定方式
+* 写在标签元素中<div onclick = "open()"></div>
+* 写在js中，document.getElementById("warp").onclick = function(){};
+* 在js中添加监听事件 document.getElementById("warp").addEventListener("click", function () {},false);
+* 使用后两种方式时也可在事件绑定时传入具体方法名而非上述匿名函数
+
+option3 :
+1.ES6 声明特性 使用 变量let  常量const  函数function 
+2.基础数据类型：number (10/NaN) 、string (""/'') 、boolean (true/false) 、undefined(未定义但不为空) 、null(空) 、symbol(ES6新增数据类型用于获取唯一值)
+3.引用数据类型 ：object (let x = [](数组对象) 、object {}(js对象) 、内置对象(DOM) document/console )
+
+option4:
+1.js对象获取其属性的方式有两种  (1). obj.属性  (2). obj[”属性名“] (可用变量代替 let name = “name” obj[name])
+* 特殊情况时只能通过第二种方式访问属性  如 obj.8 就是错误的  只能 obj[8]
+* []可以代替符号“.”  如 console.log 可以写成 console["log"]
+2.对象除了 js基本对象 {}、数组对象[] 、函数对象 function (){}还包含内置对象(DOM) document/console 
+*对象类型可赋予自定义属性 如 document.myname = "cloud"  、 function a (){}  a.myage = 18;
+3.type of 的使用 type of 变量名 或 type of(变量名)
+type of null   返回 object，type of function   返回 function
+4.获取dom对象
+* 从文档对象document 开始获取  document.getElementById(document独有)/document.getElementsByClassName(普通节点也具有)/document.getElementsByTagName(普通节点也具有)
+* 其中需要注意的是getElementById为document独有,节点不包含此方法。而其他几种方式节点都有
+* 可以使用 document.querySelector /document.querySelectorAll(兼容ie8)
+
+option5:
+1.js控制样式分为(1)改变style标签内容(2)控制标签内部样式
+* 通过获取元素的方式获取某节点后，节点的属性都可以进行读写 语法为 console.log(element.属性); / element.属性 = "";
+* 通过属性(id、className、tagName)获取元素节点只是获取dom本身的途径，获取后如果改变了属性，保存元素节点的变量本身不变依旧保存节点对象。
+eg: let x = getElementById("warp")  此时改变改元素节点的id 为 "abc" 此时,变量x依旧可以继续对此节点进行操作。
+此时如果 let y = getElementById("abc")  x 与 y 都指向同一个元素对象的引用，都可继续对此元素进行操作。
+2.控制标签内联样式，通过操作元素的style属性
+* 一个节点对象的style属性 存储着这个元素所有的内联样式，style属性数据类型为object，所以操作的方式很明显为 element.style.属性 = ""
+* element.style.cssText 这个属性保存了style属性中不为空的样式字符串。如oWrap.style.cssText = "width:10px;height:10px;" 因为是字符串可使用"+="
+* 对内联样式进行操作可能会存在兼容性问题，并且style属性的命名会将-分隔变成camel形式.
+所以一般建议使用 定义外部样式，将样式class名赋给元素  即 element.className = "box"  .box{width:100px;height:100px;}
+* 选择器补充  div#warp.box[title=myTitle]{width:100px;}
+3.节点操作自定义标签属性 (1) getAttribute (2) setAttribute (3) removeAttribute
+* attribute属性为元素节点的属性之一保存了节点的所有属性(合法、自定义)
+* 这三种方法不仅可操作自定义标签属性也可操作合法属性
+4获取元素内容  element.innerHTML  element.innerText
+* 前者可读可写可识别html  后者可读可写不能识别html
+
+option6：
+1.运算符隐式转换
+* 加号(+)两边任意一边存在字符串都会进行隐式字符串转换再进行拼接。eg："123" + 45 = "12345" , "123" + a = "123undefined"
+* 布尔值进行运算时 会被隐式转换为数字(true:1,false:0)  true + 1 = 2
+* - * / % 进行数字运算时  字符串会隐式转换为数字再进行计算 eg："20" - 10 = 10 , "20" * 10 = 200
+* 上述字符串隐式转换失败时结果会呈现number的特殊类型 NaN (not a number) eg ："10m" * 20 = NaN
+* number由数字和NaN组成  出现NaN时并未报错而是由于计算问题呈现了这种数字类型。
+* 字符串进行自增 会隐式转换为数字再自增eg：let a = "10" a++ 输出11  ， a = "可爱" a++ 输出NaN
+* 双引号 单引号无法识别html换行 但模板字符串可以(ES6 中的字符串概念 ``)
+* 一般字符串拼接变量用 + 进行拼接，模板字符串中 变量显示为${变量名} eg：a.innerHTML = "<p>" + x + "</p>";（ES5） a.innerHTML = `<p>${x}</p>`;（ES6）
+
+option7：
+1.布尔值转换与判断
+* 0 undefined null false "" NaN 这6种情况被转换为布尔值时为false，其他都为true
+
+option8:
+课程内容为已经比较熟悉的循环和条件判断，个人利用课上时间进行了vue的初步学习
+1.为什么要用vue.js
+* 过去的十年网页多亏使用了JavaScript变得更加动态化和强大，我们已经把很多传统的服务器端代码放到了浏览器中。
+这样就形成了成千上万的js代码连接html和css的状态，这种状态缺乏正规点的组织形式使前端开发变得复杂凌乱。
+所以会出现越来越多的开发者使用js框架诸如angular、react、vue
+* vue是一个友好的(Approachable)、多用途的(Versatile)、高性能的(Performant)JavaScript框架
+它能够帮你创建可维护的(Maintainable)、可测试的(Testable)代码库
+* vue是渐进式的JavaScript框架、也就是说如果你已经有一个现成的服务端应用，你可以将vue作为该应用的一部分嵌入其中，带来更加丰富的交互体验
+或者你希望将更多业务逻辑放到前端来实现，那么vue的核心库及生态系统也可以满足需求
+* vue允许你将一个网页分割成可复用的组件，每个组件都包含属于自己的html、css、JavaScript以用来渲染网页中相应的地方
+
+option9-option10:
+这两课的内容为作业讲解和案例展示，个人利用js作业完成之余使用vue实现了与js作业一样的效果
+1.实现vue开发的过程
+* 下载vue.js脚本文件，将js引用至html就可以实例化vue对象进行开发了
+* vue开发需要独特的调试工具，所以需要在浏览器(chrome)上安装插件-devtools，安装步骤及学习过程：
+	(1)根据浏览器提示或是百度可在GitHub上下载插件的安装包vue-devtools-dev或是vue-devtools-master
+	(2)安装时需要通过npm从远程服务器上下载额外文件进行安装，使用npm的前提条件是需要先安装node.js并配好环境变量
+	(3)通过命令行工具(CLI)进行一系列下载安装后vue-devtools-dev就基本安装完成了，此时需要改下配置文件manifest.json 中persistent设为true
+	(4)此时devtools就彻底安装完成了，将文件中的chrome文件夹拖入浏览器插件工具栏就OK了
+	(5)自学了vue的实例、响应式原理、组件、指令等内容基本实现了图片切换、文字变化、乘法表，此时遇到了问题
+	(6)我想通过tab按钮对图片的切换状态进行更改，但是tab与图片不属于同一vue实例，此时就需要找到一个vue实例间传值的方式
+	(7)百度了很久基本都是父子组件传值，后来偶然发现vue有自己的对象间交互的方式，那就是vuex
+	(8)vuex是一个专为 Vue.js 应用程序开发的状态管理模式，按我的方式理解它就是vue开发下一个全局的静态的数据容器
+	(9)vuex下载的过程也是通过npm直接下载到本地，使用时直接把vuex.js引入html就可以了，vuex依赖Promise，同样的方式引入了es6-promise.auto.js
+	(10)实例化vuex的store后可以在其中添加状态了，我理解为就是个全局对象，每种全局变量都是其中的属性
+	(11)接着解决刚才的问题，图片的状态变量改为vuex的全局变量，当触发tab的变化时，改变全局变量，此时图片的状态变量也随之更改
+	(12)vuex改变全局对象的方式不是简单的写入的过程，而是要通过vuex.commit(type，payload)这个自带方法进行更改，type为调用store的事件名，payload为传入的参数对象称为载荷
+
+option11：
+1.循环中es6的闭包功能
+* 如果在一个循环中绑定5个li的点击事件for(let i=0;i<len;i++){liList[i].onclick = function(){}} 最终点击每个li时liList[i]都可以访问到相应的li
+* 但是如果是在es5中，变量是用var定义的，当for循环加载后i的值为5，最终无论点击哪个li都会去访问liList[5] 结果就是报错，因为liList[5]是undefined
+* 其中的差别就是es6 用let定义i在循环为每个li绑定事件时会存储当前li的索引i，存储的过程在封装好的闭包中实现，代码中是看不到的，而es5用var定义i，其为定值
+* 如果es5的var想实现es6的let具有的功能可以在循环时为li对象添加自定义属性x然后使用索引x存储当前的i，这样触发点击时liList可以找到对应的li即liList[x]
+
+option12：
+1.函数表达式与自定义函数的区别
+* 声明一个函数有两种方式即函数表达式和自定义函数
+* 函数表达式必须先声明再调用，而自定义函数无所谓先后，但建议先声明再调用
+* 自定义函数后跟括号无法自执行：function a() = {alert(1)}(); 而函数表达式可以：let a = function(){alert(1)}();
+2.函数表达式的自执行
+* 函数想自执行就必须是一个函数表达式，函数可以通过以下方法变成函数表达式
+* 第一种：function(){alert(1)}加上括号这个运算符可以变成函数表达式即 (function(){alert(1);})(); 这样就实现了函数表达式的自执行
+* 第二种：(function(){alert(1);}()); 第三种：+function(){alert(1);}(); 
+第四种：-function(){alert(1);}(); 第五种：~function(){alert(1);}(); 第六种：!function(){alert(1);}();
+3.函数的不定参
+* 每个function都有不定参 arguments 是一个类数组，其中存储着所有的实参即为实参的集合。访问任何一个实参只需要使用传入顺序的索引即可 eg：arguments[index]
+4.浏览器顶层对象window
+* 浏览器中的最顶层对象为window，访问window下大部分属性时可省略window  如 alert() 、document 
+* 如果想判断浏览器中有无某方法 不能直接写在if中 if(requestAnimationFrame) 
+* 这样写如果不存在会报错 但如果判断某对象是否有这个属性就可以 如 if(window.requestAnimationFrame)
+5.上下文this
+* es5中 var a = function(){console.log(this)} 此时this会指向window ，因为a此时作为window的一个属性
+* es6中 let a = function(){console.log(this)} 此时this会指向window，但a不是window的属性而是自己的作用域
+* 如果在多层嵌套的对象中访问this，此时this指向它所在的对象即它的爸爸 而不是它的爷爷。eg：afei.xx.x = function(){console.log(this)} 执行时this指向xx这个对象
+* 总结来说就是在函数自执行时this指向window，在作为属性时指向.前面的东东
+
+option13:
+1.return的使用
+* 函数如果没有返回值默认为undefined
+* 如果函数a返回其中内嵌的函数b结果分两种情况。(1)如果b无返回值a返回b这个函数对象本体(2)如果b有返回值那么a返回b的返回值
+* 当函数赋值于一个事件时不用加()  ，如果加了()则执行时先让函数自执行并将函数返回值赋值于事件
+* 访问对象的数字类型属性时必须使用[]的方式，加不加引号都可以建议不加eg：let a ={5:"abc"} 访问abc时写为 a[5]
+2.获取元素的动态与静态之分
+* ducument.getElementById为静态获取方法，let obj = ducument.getElementById('#warp') 此时改变这个对象的id 则obj还是对象本身不会改变
+* ducument.getElementsByClassName为动态获取方法，let obj = ducument.getElementsByClassName('job')，每次访问obj都会执行一次获取方法
+* 此时如果改变p的class 由job改为work 则访问obj[0]就会再执行一遍getElementsByClassName('job') 显然找不到名为job的节点了
+* 为了避免这种情况 最好把想要访问的对象从集合中取出来 比如 let a = obj[0]  此时改变a的属性就可以了
+
+option16:
+* 在任何作用域使用未声明的变量，则此变量会被添加到window对象的属性，在严格模式中，不允许这样做
+* eg：function(){var x=y=10;}console.log(x)此时会报错，但console.log(y) 则会为10
+* 因为x在局部作用域外部访问不到，但y在本作用域中找不到顺着找父级，都找不到就变成了window的属性值为10
+1.es5中的解析顺序
+* 并非是从上到下解析，alert(x) var x = 7;不会报错而弹出undefined
+* 解析顺序：(1)定义：找出当前作用域里面所有var和function定义的变量名(注意：先找出所有var后再找所有function)
+			(2)执行：从上到下执行
+* 每执行到一个新的作用域都会按上述方式解析
+2.定义过程重名解析顺序
+* 多个var 声明重名，只留一个
+* 多个function 声明重名，只留最后一个
+* var和function重名，无论数量和先后只留最后函数体
+
+option17:
+1.闭包
+* 一个使用了外部函数的参数或变量的函数
+* 在一个页面中全局变量始终不会被回收除非关闭页面，除了全局变量有且仅有闭包也有这种特性
+* 局部变量在最后一次访问结束后会自动回收
+* 当避免全局变量名重复导致冲突则可以使用闭包 eg：
+(function () {
+	var num = 10; 
+	document.onclick = function(){
+		num++;
+		alert(num);
+	}
+})();
+此时被绑定的点击函数使用了外部函数的变量num ，并且这个点击事件是一个可能会再次执行的函数 ，所以这个点击的函数就是个闭包
+* for循环里的点击函数就是最常用的闭包，点击函数调用的循环索引i在每次循环时都会被存起来(只有es6的let才可以)
+* 因为es6的let在for循环中会创建自己的作用域而es5的var则不会
+* 由此可以将闭包的概念换一种说法：
+在作用域嵌套的情况下，子作用域使用了外部作用域的变量或参数并且子作用域的内容有可能再次执行。那么子作用域就是个闭包
+* 通常为了使用闭包会在子函数外部包一层自执行的函数，并且子函数使用外部函数的变量或者参数
+* 进行对象的判断不仅要值一样，地址也要一样，同时定义两个相同的函数他们的地址也不一样
+2.es6中的解析顺序：
+* let 与 const解析顺序一致：只能先定义再使用，只有function会被提前解析可以在任何位置定义
+* //暂时性死区--只要在当前作用域里面let过变量，那就不允许在这条定义语句前使用，哪怕外部有这个变量
+* let 的作用域可以理解为只在 {} 里
+
+option18：
+1.改变this指向的几种方式：call、apply 、bind
+* 环境：function a (形参1，形参2){ console.log(this) }
+* call:  a.call(document，[实参1],[实参2]...); 执行之后会将a函数的this指向为传入的参数(此处为document)并自执行
+* apply: a.apply(document,[实参1，实参2]) 功能和call一致，唯一不同的是第二个参数只能是个数组
+* bind: a.bind(document,实参1,实参2) 传参方式与call 一致 但它的特点是不会自执行，想使用需要被绑定在事件上或加括号自执行
+2.dom对象的属性classList
+* 可以使用此属性下的add方法或remove添加或删除某样式aDiv.classList.add("show")/aDiv.classList.remove("show")
+* 或者可以使用toggle实现切换 aDiv.classList.toggle("show")
+3.checked 复选框的用法
+* checked是input标签自有的属性 ，它的值是一个boolean类型的值
+* 当改变checked的值时，它会自动把赋予的值转换为boolean类型的值eg：oInp.checked = "aaa" 
+* checked = "checked" 没有特殊的意义 都会把右边的值转换为boolean
+* type为checked 的input标签拥有onchange事件，点击时会改变checked属性所以触发此事件
+
+option20:
+1.解构赋值
+* 第一种为数组结构赋值 即 let [a,b,c,d] = [1,2,3,4]
+* 第二种为对象解构赋值 即 let {a:x,b:y} = {a:1,b:2} 此时定义了x与y两个变量 值分别为1 ，2
+* 对象解构赋值有些特别，机制可以理解为前面属性名匹配后面的属性名并把匹配成功的值赋给前面属性，上述的结果为
+定义了两个变量x,y 值分别为1,2
+2.结构赋值高级用法
+* 解构赋值基于Iterator接口 只要等号右边的值符合此接口都可以 
+* 如 let [a,[b,c],d] = [1,[2,3],4]  let [a,b,c] = "hello" 此时 a = "h" b="e" c="l"
+* 下列值不具备上述接口无法实现解构赋值  NaN undefined false 
+* 如果前后模式不对应则会报错
+3.结构赋值的默认值
+* let {a:x,b:y,c:z=100} = {a:1,b:2} 此代码的执行过程为 
+(1) 从赋予的值中寻找c属性，结果未找到 z的值为undefined
+(2) 此时z的值严格等于undefined 所以z使用默认值100
+* 解构赋值的默认值 只有当值严格为undefined的时候 才会使用默认值
+3.es6的新规则之对象简写规则
+* 当属性名与对应值的变量同名时可以只写属性名，即 let a = 10;let b = 20; let c = {a:a,b:b} 此时可以写为 let c = {a,b}
+
+option21 ~ option22:
+1.string 常用方法(api)
+(1) charAt() 方法可返回指定位置的字符,返回的字符是长度为 1 的字符串
+* 字符串中第一个字符的下标是 0。如果参数 index 不在 0 与 string.length 之间，该方法将返回一个空字符串。
+(2) charCodeAt() 方法可返回指定位置的字符的 Unicode 编码。这个返回值是 0 - 65535 之间的整数。
+* 字符串中第一个字符的下标是 0。如果 index 是负数，或大于等于字符串的长度，则 charCodeAt() 返回 NaN。
+(3) fromCharCode() 可接受一个指定的 Unicode 值，然后返回一个字符串。
+* 该方法是 String 的静态方法，字符串中的每个字符都由单独的数字 Unicode 编码指定。
+* 它不能作为您已创建的 String 对象的方法来使用。因此它的语法应该是 String.fromCharCode()，而不是 myStringObject.fromCharCode()。
+* document.write(String.fromCharCode(72,69,76,76,79)) 输出结果为 HELLO
+(4) substring() 方法用于提取字符串中介于两个指定下标之间的字符。
+* substring() 方法返回的子串包括 start 处的字符，但不包括 stop 处的字符。
+* 如果参数 start 与 stop 相等，那么该方法返回的就是一个空串（即长度为 0 的字符串）。
+* 如果 start 比 stop 大，那么该方法在提取子串之前会先交换这两个参数。
+* 与 slice() 和 substr() 方法不同的是，substring() 不接受负的参数。
+(5) slice() 方法可提取字符串的某个部分，并以新的字符串返回被提取的部分。
+* slice() 与 substring()主要有两点区别 (1) 前者允许使用负数作为参数后者不行。(2) 前者必须依照截取前后顺序后者不用(可自动调换参数位置)
+* slice() 与 substr() 有所不同，因为它用两个字符的位置来指定子串，而 substr() 则用字符位置和长度来指定子串。
+* eg：let a = "cloud_up" console.log( a.slice(-8,-3) ) 则会输出 cloud  console.log( a.slice(-2) ) 则会输出 up
+(6) toLocaleUpperCase() ,toLocaleLowerCase()
+(7) 正则表达式
+* 针对于字符串操作首先应想到的方式就是正则表达式 RegExp
+* 唯一的作用就是匹配字符串
+
+2.array 常用方法(api)
+(1) push() 方法可向数组的末尾添加一个或多个元素，并返回新的长度。
+* 语法：arrayObject.push(newelement1,newelement2,....,newelementX)
+(2) pop() 方法用于删除并返回数组的最后一个元素。不需要参数
+* 语法：arrayObject.pop()
+* 注意：pop() 方法将删除 arrayObject 的最后一个元素，把数组长度减 1，并且返回它删除的元素的值。
+如果数组已经为空，则 pop() 不改变数组，并返回 undefined 值。
+push() 方法和 pop() 方法使用数组提供的先进后出栈的功能
+(3) shift() 方法用于把数组的第一个元素从其中删除，并返回第一个元素的值。
+* 语法：arrayObject.shift()
+* 注意：如果数组是空的，那么 shift() 方法将不进行任何操作，返回 undefined 值。
+(4) unshift() 方法可向数组的开头添加一个或更多元素，并返回新的长度。
+* 语法：arrayObject.unshift(newelement1,newelement2,....,newelementX)
+* 注意：unshift() 方法无法在 Internet Explorer 中正确地工作！
+(5) splice() 方法向/从数组中添加/删除项目，然后返回被删除的项目。
+* 语法：arrayObject.splice(index,howmany,item1,.....,itemX)
+* 注意：splice() 方法可删除从 index 处开始的零个或多个元素，并且用参数列表中声明的一个或多个值来替换那些被删除的元素。
+如果从 arrayObject 中删除了元素，则返回的是含有被删除的元素的数组。
+(6) sort() 数组升序排列 ，reverse()  数组反序排列(并非降序)
+* 如果想让数组降序排列 需要使数组先sort() 再reverse() 
+* eg: let a = [1,3,6,2]; let b = a.sort(); 执行结果为 [1,2,3,6] 此时 a===b 数据变化地址相同可以看作指向统一个对象
+* sort可以传入自定义函数进行排序 a.sort(function(a,b){return a-b;}) 此时 sort内部会调用若干次这个函数并根据返回值进行转换位置
+* 返回值为负值则不变，正值时交换位置。sort的默认写法就是类似上述返回a-b的形式以一种升序进行排序。
+* 如果想通过这种形式使数据降序就方便很多只需要把 a-b 换成 b-a 当后者大于前者返回正值此时交换位置，大的放前面
+* a,b 代表的是每次进行排序时数组取的两个值，所以如果想根据对象的属性进行排序只需要将具体的参数换成a.属性，b.属性
+* eg：[{name:a,age:20},		此时如果想对这个对象根据age进行升序排序可以使用这种方式 
+	   {name:b,age:15},		a.sort(function(a,b){
+	   {name:c,age:24},				return a.age-b.age;
+	   {name:d,age:9}] 				})   //降序的话则反过来 b.age-a.age
+(7) 数组的接入方法 array.concat(array1,array2) 在某数组内接入传入的值 eg let a =[]; let b = a.concat(1,2,[3,4]) 则b为[1,2,3,4]
+(8) 数组的拼接方法 join(拼接字符串) eg: let a = ['a','b','c']; let b = a.join(':'); 则b为 "a:b:c"
+(9) 数组的遍历方法 forEach eg:let a = ['a','b','c']; a.forEach(function(x,y,z){alert(x);})
+* forEach必须传入一个函数作为参数，在API中传入函数的参数有三个(必须按顺序) 1：遍历的每一个数据 2：当前的索引 3：原数组
+(10) 数组还有个遍历的方法 map 用法与forEach相同 eg:let a = [2,4,6]; a.map(function(x,y,z){alert(x); return x*x;})
+* map的特点就是它最终可以返回一个数组，这个数组的每一位就是每次遍历return的值 如上述let b = a输出的b 为[4,16,36]
+(11) 数组的过滤方法 filter 用于对数组进行过滤 同map一样最终返回一个数组，每次遍历根据返回值的真假决定是否留下该数据
+eg：let a = [10,20,5,7,89,41] a.filter(funtion(x,y,z){console.log(x,y,z); return false}) 
+* 此时return false 则必定没有任何数据被加入返回的数组  所以 上述返回空数组 [] 即把所有数据都过滤掉
+(12) es6的扩展运算符 : ...
+【1】语法活用：
+* 数组的拆解 let a = [1,3,5] alert(...a) 则会弹出 1,3,5 结果并不是个字符串仅仅是进行去掉[]
+* 比如把...a 作为参数传入一个函数 会被理解为传入了三个实参分别为1,3,5
+* es5中 连接多个数组时可以写为  let a = [1,2]; let b = [4,5] let c = a.concat(b) 此时[c为1,2,4,5] 
+* es6中 只需要这么写 let c = [...a,...b] 效果与上述一致 c 为[1,2,4,5]
+【2】解构赋值
+* 在数组的结构赋值中也可以使用这个扩展符 let [a,...b] = [1,2,4,5]  此时 a = 1  b = [2,4,5]
+* 这几种数据类型具有Iliterator接口 可以进行解构赋值array string nodelist 
+【3】类数组遍历(元素节点集合遍历)
+* es5中想要遍历节点集合需要通过[].forEach.call(nodeList,function(){...})将类数组内部转为数组再进行遍历
+* es6中则可以使用扩展符直接把节点集合转为数组即 [...nodeList].forEach(funtion(){...});
+* 当实参比形参数量多时 ...可以代表剩余所有参数 eg: function fn(a,...b){console.log(a);console.log(b)} fn(2,4,5,6)
+* 此时a = 2 b = [4,5,6] 由此得知 fn的形参可以直接为 fn(...param){} 这个param名字随便定义 就是包含所有实参的集合(相当于es5的arguments)
+3.string与arr的混合运用
+* 当想要对字符串进行操作时首先应想到的是正则表达式 RegExp
+* 如果想要对字符串进行替换操作可使用string.replace('{正则表达式}',newString)
+* 在不使用RegExp时，如果想替换可以使用string.split() 与 arr.join()
+* (1)使用string.split('{被替换的子串}')先将string通过子串进行分割(即删除所有子串的过程)
+* (2)使用array.join('{新的子串}')可以把之前分割好的数组依据新的子串进行拼接(即在原位置添加所有子串的过程)
+* 此方法的运用打破了原本split方法仅仅通过单个字符进行分割的思维定式
+
+option23:
+* Math.PI 输出圆周率
+* 输出一个n至m的随机数函数 function rondom(n=0,m=n+1){return Math.round((m-n)*Math.random+n);}
+* parseInt(number,进制数量) eg：parseInt("ff",16) 为15*16^1+15 = 255
+* 在底层中parseFloat会先将传入的参数进行类型判断，转换成为字符串，再转换为number
+* es6中新加的指数计算符 ** 可以计算某数字的某次方  eg: 3**5 = 243 即3的5次方
+
+option24:
+1.对象的遍历、添加、删除、修改、查找
+* for(ket key in obj) { console.log(obj[key]); }  (不能用obj.key因为key是变量不是确切的属性名)
+* 对象的属性是无序的，当读取和遍历时，会按照属性名的字母顺序(ASCLL码)进行访问
+* 对象的添加就直接obj.新属性名 = {value} 不需要特殊方法。
+* 对象的删除就需要新的关键字了 delete obj.属性名;
+* 对象的修改也是直接obj.某属性名 = {newValue}
+* 对象的查找(判断某属性是否存在) 使用关键字 in  eg：console.log(属性名 in obj) 存在返回true否则返回false
+2.JSON
+* json是一种特定的【格式】，是一种长得像js对象的字符串格式
+* json格式中属性与值必须使用双引号 eg：let a = '{"name","cloud","age","22"}'
+* 序列化是将状态信息转换为对象的过程
+* 对象反序列化为json ：JSON.stringify(obj) => json
+* json序列化为对象：JSON.parse(json) => obj
+
+option25:
+1.定时器：setTimeOut(fun,time)/setInterval(fun,time) (循环定时器)
+* 定时器方法存在最低间隔时间，具体数值取决不同浏览器 比如chrome最块只能16.6(1000/60)毫秒执行一次 (1s 60帧)
+* 队列思想：定时器方法加载时会被放入队列，当主程序运行结束后才会开始执行
+* setInterval("fn(2,3)",1000) 通过双引号可以执行此函数但是只会在全局访问fn，如果函数被定义为局部函数则会报错
+* setInterval(fn,1000,2,3) 时间间隔参数往后依次是所执行函数的实参
+* 在某页面中加载多个定时器时会为每个定时器设定一个编号(从1开始依次+1)
+* 任意一个定时器的编号就是这个定时器的返回值
+2.H5出的新API
+* requestAnimationFrame 是一个不能设置时间参数的func 一般可以写在某函数中进行回调
