@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>这是js第48期第25课的作业-无缝轮播</title>
+</head>
+<style>
+    body {font-family: "Microsoft YaHei", serif;user-select: none;}
+    body, dl, dd, p, h1, h2, h3, h4, h5, h6 {margin: 0;}
+    ol, ul, li {margin: 0;padding: 0;list-style: none;}
+    img {border: none;}
+
+    #container {
+        width: 500px;
+        height: 450px;
+        margin:80px auto 0;
+    }
+    #pictureBox
+    {
+        position: relative;
+        width:500px;
+        height:320px;
+        overflow: hidden;
+    }
+    #pictureBox ul
+    {
+        position: absolute;
+        left:-100%;
+        width:1000%;
+        height:100%;
+        transition: left 0s;
+    }
+    #pictureBox ul.addTransition{
+        transition: left 0.3s;
+    }
+    #pictureBox ul li
+    {
+        float: left;
+        width: 10%;
+        height:100%;
+    }
+    #pictureBox ul li img
+    {
+        width:500px;
+        height:320px;
+    }
+    p.dec
+    {
+        position:absolute;
+        left: 0;
+        width: 100%;
+        height: 20px;
+        color:#fff;
+        text-align: center;
+        font-size: 14px;
+        line-height: 20px;
+        background:rgba(0,0,0,.5);
+    }
+    p.decTop
+    {
+        top:0;
+    }
+    p.decBottom
+    {
+        bottom:0;
+    }
+    #btnTurn div
+    {
+        position: absolute;
+        top:50%;
+        width:30px;
+        height:30px;
+        margin-top: -20px;
+        line-height: 30px;
+        color:#fff;
+        font-weight: bolder;
+        font-size: 12px;
+        text-align: center;
+        cursor: pointer;
+        background-color: rgba(0,0,0,.5);
+    }
+    #btnTurn .left{
+        left: 0;
+        border-radius: 50%;
+        transform: translate(-5px);
+    }
+    #btnTurn .right{
+        right: 0;
+        border-radius: 50%;
+        transform: translate(5px);
+    }
+</style>
+<script>
+    window.onload = function () {
+        let pictrueBox = document.querySelector("#pictureBox ul"),
+            imgList = document.querySelectorAll("#pictureBox li"),
+            dec = document.getElementsByClassName("dec"),
+            btnLeft = document.querySelector(".left"),
+            btnRight = document.querySelector(".right"),
+            length = imgList.length - 2,
+            index = 1,
+            timer;
+        //初始化
+        dec[0].innerHTML = index + "/" + length;
+        dec[1].innerHTML = imgList[index].firstChild.title;
+
+        function change(type) {
+            pictrueBox.classList.add('addTransition');
+            type ? ++index : --index;
+            pictrueBox.style.left = index * -100 + "%";
+            dec[0].innerHTML = imgList[index].firstChild.id + "/" + length;
+            dec[1].innerHTML = imgList[index].firstChild.title;
+            if (!type && index === 0) {
+                timer = setTimeout(() => {
+                    pictrueBox.classList.remove('addTransition');
+                    pictrueBox.style.left = length * -100 + "%";
+                    index = 5;
+                    clearTimeout(timer);
+                }, 300);
+            }
+            if (type && index === imgList.length - 1) {
+                timer = setTimeout(() => {
+                    pictrueBox.classList.remove('addTransition');
+                    pictrueBox.style.left = -100 + "%";
+                    index = 1;
+                    clearTimeout(timer);
+                }, 300);
+            }
+        }
+        btnLeft.onclick = () => change(0);
+        btnRight.onclick = () => change(1);
+    }
+</script>
+<body>
+<div id="container">
+    <div id="pictureBox">
+        <ul>
+            <li><img src="img/08/s5-SKT-T1.jpg" title="冠军专属皮肤-S5_SKT1" id = "5" alt=""></li>
+            <li class="show"><img src="img/08/s1-Fnatic.jpg " title="冠军专属皮肤-S1_Fnatic" id = "1" alt=""></li>
+            <li><img src="img/08/s2-TPA.jpeg" title="冠军专属皮肤-S2_台北TPA" id = "2" alt=""></li>
+            <li><img src="img/08/s3-SKT-T1.jpg" title="冠军专属皮肤-S3_SKT1" id = "3" alt=""></li>
+            <li><img src="img/08/s4-SSW.jpg" title="冠军专属皮肤-S4_SSW" id = "4" alt=""></li>
+            <li><img src="img/08/s5-SKT-T1.jpg" title="冠军专属皮肤-S5_SKT1" id ="5" alt=""></li>
+            <li><img src="img/08/s1-Fnatic.jpg " title="冠军专属皮肤-S1_Fnatic" id ="1" alt=""></li>
+        </ul>
+        <!-- 图片信息 -->
+        <p class="dec decTop"></p>
+        <p class="dec decBottom" style="font-size: 14px;"></p>
+        <!-- 切换按钮 -->
+        <div id="btnTurn">
+            <div class = "left"> < </div>
+            <div class = "right"> > </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
