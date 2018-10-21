@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>这是js第48期第28课的作业-时间显示器</title>
+</head>
+<style  >
+    body {font-family: "Microsoft YaHei", serif;user-select: none;}
+    body, dl, dd, p, h1, h2, h3, h4, h5, h6 {margin: 0;}
+    ol, ul, li {margin: 0;padding: 0;list-style: none;}
+    img {border: none;}
+    #container {
+        width: 300px;
+        height: 80px;
+        margin: 100px auto 0;
+        background: rgb(43, 43, 43);
+        border: 1px solid rgb(43, 43, 43);
+        border-radius: 30px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    #currentDate{
+        width:280px;
+        height:50px;
+        line-height: 50px;
+        margin:15px auto;
+        font-size: 40px;
+        color:#bbb;
+        text-align: center;
+    }
+    #currentDate span{
+        padding:0 5px;
+        margin:2px;
+        background: rgb(50,50,50);
+        border-radius: 10px;
+    }
+    #currentDate #tab{
+        float:right;
+        width:33px;
+        height:52px;
+        background: rgb(50,50,50);
+        border-radius: 10px;
+        position: relative;
+        top:-1px;
+        left:-6px;
+        overflow: hidden;
+    }
+    #currentDate #tab ul {
+        width: 33px;
+        height: 200%;
+        position: absolute;
+        top: 0;
+        animation: top .4s linear 0s 1;
+        animation-fill-mode: forwards;
+    }
+    @keyframes top {
+        form{top:0;}
+        to{top:-52px;}
+    }
+    #currentDate ul li {
+        width: inherit;
+        height: 52px;
+    }
+</style>
+<script>
+    window.onload = function () {
+        let time = document.querySelector("#currentDate"),
+            hours, minutes, seconds, oldSec,
+            date = new Date(),
+            currentSecond = date.getSeconds();
+
+        function showTime() {
+            [hours, minutes, seconds] = [date.getHours(), date.getMinutes(), date.getSeconds()];
+            [hours, minutes, seconds] = [hours < 10 ? "0" + hours : "" + hours, minutes < 10 ? "0" + minutes : "" + minutes, seconds < 10 ? "0" + seconds : "" + seconds];
+            oldSec = seconds.charAt(1) === "0" ? 9 : seconds.charAt(1) - 1;
+            time.innerHTML = `<span>${hours.charAt(0)}</span><span>${hours.charAt(1)}</span>:
+                                  <span>${minutes.charAt(0)}</span><span>${minutes.charAt(1)}</span>:
+                                  <span >${seconds.charAt(0)}</span><div id="tab"><ul><li>${oldSec}</li><li>${seconds.charAt(1)}</li></ul></div>`;
+        }
+        function timeInterval() {
+            date = new Date();
+            if (currentSecond !== date.getSeconds()) {//当前秒数不等于上次迭代的秒数，即可判断此时进入了下一秒
+                currentSecond = date.getSeconds();//获取每次迭代的秒数
+                showTime();
+                setTimeout(() => {
+                    requestAnimationFrame(timeInterval);
+                }, 400);//延时后继续进入迭代
+                return;//数字动画期间终止迭代
+            }
+            requestAnimationFrame(timeInterval);
+        }
+
+        showTime();//初始化时间显示
+        setTimeout(timeInterval, 400);//数字动画完成后进入迭代
+    }
+</script>
+<body>
+<div id="container">
+    <div id="currentDate"></div>
+</div>
+</body>
+</html>
