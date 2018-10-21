@@ -251,7 +251,8 @@ push() 方法和 pop() 方法使用数组提供的先进后出栈的功能
 * 如果想让数组降序排列 需要使数组先sort() 再reverse() 
 * eg: let a = [1,3,6,2]; let b = a.sort(); 执行结果为 [1,2,3,6] 此时 a===b 数据变化地址相同可以看作指向统一个对象
 * sort可以传入自定义函数进行排序 a.sort(function(a,b){return a-b;}) 此时 sort内部会调用若干次这个函数并根据返回值进行转换位置
-* 返回值为负值则不变，正值时交换位置。sort的默认写法就是类似上述返回a-b的形式以一种升序进行排序。
+* 返回值<0则不变，>0时交换位置。sort的默认写法就是类似上述返回a-b的形式以一种升序进行排序。
+* 如果想对数组随机进行排序则可以返回 Math.random() - 0.5 即 返回一个 -0.5~0.5 的数，这样交换ab值的概率就是50%了
 * 如果想通过这种形式使数据降序就方便很多只需要把 a-b 换成 b-a 当后者大于前者返回正值此时交换位置，大的放前面
 * a,b 代表的是每次进行排序时数组取的两个值，所以如果想根据对象的属性进行排序只需要将具体的参数换成a.属性，b.属性
 * eg：[{name:a,age:20},		此时如果想对这个对象根据age进行升序排序可以使用这种方式 
@@ -321,3 +322,35 @@ option25:
 * 任意一个定时器的编号就是这个定时器的返回值
 2.H5出的新API
 * requestAnimationFrame 是一个不能设置时间参数的func 一般可以写在某函数中进行回调
+
+option26：
+1.Date类
+* let d = new Date(); 实例化date对象 d 是一个object 实例化的时间戳为本机当前时间
+2.Date类的API
+*以下api返回数字
+getFullYear()  //年
+getMonth()     //月
+getDate()      //日
+getHours()     //时
+getMinutes()   //分
+getSeconds()   //秒
+getDay()       //星期
+* d.getUTC() 返回object、toUTCString() 返回string  //获取0时区格林威治时间
+* d.getTime() 返回number //获取从1970年1月1日至当前时间经过了多少毫秒 如153987025236
+* 时间戳可做减法let x = new Date() setTimeOut(let y = new Date(); console,log(y-x),3000) 得出3003 会有来源于setTimeOut的误差
+* setTimeOut 与 setInterval 间隔时间越小造成的误差就越大
+* new Date()实例化日期时，传入参数可设置时间戳依次为年月日时分秒
+* 如果只传入一个参数，构造函数会在1970年那个基本的时间基础上加上参数的毫秒数
+
+option27:
+1.定时器使用区别
+* 在使用定时器实现function重复执行的时候，建议将setTimeOut(fun)写在函数中迭代而不是在函数外使用setInterval(fun)
+* 因为前者只有当代码执行结束会开启新的定时器执行下一次，而后者不管本次代码执行是否结束，只要间隔时间到了就进行下一次代码执行
+2.运动框架细节处理：
+(1)requestAnimationFrame是新的定时器方法与setTimeOut功能一致
+* 特点是参数不需要传入时延会默认使用浏览器最小执行时间作为时延
+* 为了兼容所有浏览器在使用时需要进行兼容判断，代码如下：
+window.requestAnimationFrame = window.requestAnimationFrame || function(fn){return setTimeOut(fn,1000/60);};
+window.cancelAnimationFrame = window.cancelAnimationFrame || clearTimeOut;
+(2)获取元素最终展示样式的对象的方法：var cssObj = ele.currentStyle || getComputereStyle(ele)
+* 前者是IE特有的属性，后者是大多数浏览器都用的方法
