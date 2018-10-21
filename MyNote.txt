@@ -354,3 +354,12 @@ window.requestAnimationFrame = window.requestAnimationFrame || function(fn){retu
 window.cancelAnimationFrame = window.cancelAnimationFrame || clearTimeOut;
 (2)获取元素最终展示样式的对象的方法：var cssObj = ele.currentStyle || getComputereStyle(ele)
 * 前者是IE特有的属性，后者是大多数浏览器都用的方法
+
+option28:
+这节课讲述数组排序，定时器等案例用法。课后通过作业完成了一个数字上下切换的时间显示器，以下为作业完成经验：
+* 主要思路有三点
+(1)时间的显示主要通过Date下的获取时分秒的API
+(2)为了最精准的实时获取当前的时间，需要在函数中使用requestAnimationFrame(fn)的方式用最快的速度进行迭代
+(3)在不断迭代的过程中判断本次时间与上次是否相同，如果不同则可判断此时进入到了下一秒，这时可进行数字切换操作
+(4)在数字切换的过程中为了完好的实现动画效果，这时应该用return停止迭代直到动画完全结束。
+(5)为了在动画结束后继续迭代，需要在return前设置一个时延为动画时长的setTimeOut，以便在动画刚结束时继续迭代
