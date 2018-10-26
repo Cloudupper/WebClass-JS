@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>这是js第48期第29课的作业-节点动态添加与删除</title>
 </head>
 <style>
     body {font-family: "Microsoft YaHei", serif;user-select: none;}
@@ -75,7 +75,7 @@
         let spanList = [...document.querySelectorAll('#container #work #operator p.ope span')],
             showP = document.querySelector('#container #work #operator p.show'),
             rightShowP = document.querySelector('#container #work div#show p'),
-            showArr = [];
+            showArr = [];//用于存储节点及状态避免重复执行节点操作
 
         spanList.forEach((obj,index)=>{
             obj.onclick=function () {
