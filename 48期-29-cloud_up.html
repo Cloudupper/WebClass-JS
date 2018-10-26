@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    body {font-family: "Microsoft YaHei", serif;user-select: none;}
+    body, dl, dd, p, h1, h2, h3, h4, h5, h6 {margin: 0;}
+    ol, ul, li {margin: 0;padding: 0;list-style: none;}
+    img {border: none;}
+    #container{
+        position: absolute;
+        width:100%;
+        height:666px;
+        background:linear-gradient(180deg,#8CC1DE,#F9A886);
+    }
+    #work{
+        width:800px;
+        height:500px;
+        margin:100px auto 0;
+    }
+    #work #operator {
+        float: left;
+        width: 470px;
+        height: inherit;
+        background: #fff;
+    }
+    #work #operator p.ope{
+        margin: 30px 20px 0;
+        color:#F9A886;
+    }
+    #work #operator p.ope span{
+        color:#8CC1DE;
+        cursor: pointer;
+        margin:0 5px;
+    }
+    #work #operator p.ope span:hover{
+        color:orangered;
+    }
+    #work #operator p.show{
+        margin:10px;
+    }
+    #work #operator p.show span{
+        border:1px solid #ddd;
+        color:#888;
+        margin:5px;
+        padding:0 5px;
+    }
+    #work #operator p.show i{
+        border-left: 1px solid #ddd;
+        margin:0 2px;
+        padding:0 3px;
+        cursor: pointer;
+    }
+    #work #show {
+        float: right;
+        width: 330px;
+        height: inherit;
+        background: rgba(0,0,0,.5);
+    }
+    #work #show p{
+        margin:10px;
+    }
+    #work #show span{
+        float: left;
+        color: #fff;
+        border:1px solid #fff;
+        padding:0 5px;
+        margin: 5px;
+    }
+</style>
+<script>
+    window.onload = function () {
+        let spanList = [...document.querySelectorAll('#container #work #operator p.ope span')],
+            showP = document.querySelector('#container #work #operator p.show'),
+            rightShowP = document.querySelector('#container #work div#show p'),
+            showArr = [];
+
+        spanList.forEach((obj,index)=>{
+            obj.onclick=function () {
+                if (!showArr[index]) showArr[index] = {};
+                if(showArr[index].isExist) return;
+                addSpanElement(this.innerHTML,index);
+            }
+        });
+        function addSpanElement(text,index) {
+            let data = showArr[index];
+            //初始化添加span节点
+            if(!data.showSpan)
+            {
+                let spanNode = document.createElement('span'),
+                    iNode = document.createElement('i'),
+                    txtNode = document.createTextNode(text),
+                    clickNode = document.createTextNode('x');
+                spanNode.appendChild(txtNode);
+                spanNode.appendChild(iNode);
+                iNode.appendChild(clickNode);
+                //绑定删除事件
+                iNode.onclick = function(){
+                    showP.removeChild(data.showSpan);
+                    rightShowP.removeChild(data.rightSpan);
+                    data.isExist = false;
+                };
+                //添加右侧span
+                let rightSpan = document.createElement('span'),
+                    txtNodeR = document.createTextNode(text);
+                rightSpan.appendChild(txtNodeR);
+                data.showSpan = spanNode;
+                data.rightSpan = rightSpan;
+            }
+            //如果元素已经初始化，后面每次添加只需执行以下代码
+            showP.appendChild(data.showSpan);
+            rightShowP.appendChild(data.rightSpan);
+            data.isExist = true;
+        }
+    }
+</script>
+<body>
+<div id ="container">
+    <div id="work">
+        <div id="operator">
+            <p class="ope">热门目的地：<span>日本</span><span>泰国</span><span>香港</span><span>瑞士</span><span>台湾</span><span>钓鱼岛</span></p>
+            <p class="show"></p>
+        </div>
+        <div id="show"><p></p></div>
+    </div>
+</div>
+</body>
+</html>
